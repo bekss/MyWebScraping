@@ -1,0 +1,7 @@
+*main.py 
+*.idea\
+*venv\
+*marafon\marafon\__pycahe__
+*.git\
+*.log
+*.csv
