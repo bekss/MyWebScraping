@@ -38,7 +38,7 @@ class MarafonSpiders(scrapy.Spider):
         buttons[3].click()
 
         items = MarafonItem()
-        NameTable = 'Kibersport'
+
         KibersportContent = response.css('div.result-sport-content')
         items['Category_label'] = KibersportContent.css('div.category-label::text').extract()
         items['Names'] = KibersportContent.css('td.label::text').extract()
@@ -51,17 +51,23 @@ class MarafonSpiders(scrapy.Spider):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # script = response.xpath("//div[@class='result-sport']/text()").extract_first()
-
-
-
-
-
-
-
-
-
-
     # import scrapy
     # import selenium
     # from scrapy.selector import Selector
