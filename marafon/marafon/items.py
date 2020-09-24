@@ -7,7 +7,7 @@ import scrapy
 
 
 class MarafonItem(scrapy.Item):
-    Category_label = scrapy.Field()
+    Table = scrapy.Field()
     Names = scrapy.Field()
     Score = scrapy.Field()
     Date = scrapy.Field()

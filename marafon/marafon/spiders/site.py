@@ -38,13 +38,15 @@ class MarafonSpiders(scrapy.Spider):
         buttons[3].click()
 
         items = MarafonItem()
-
-        KibersportContent = response.css('div.result-sport-content')
-        items['Category_label'] = KibersportContent.css('div.category-label::text').extract()
-        items['Names'] = KibersportContent.css('td.label::text').extract()
-        items['Score'] = KibersportContent.css('td.value::text').extract()
-        items['Date'] = KibersportContent.css('td.date::text').extract()
-        return items
+        SportContent = response.css('div.result-sport-content')
+        items['Table'] = SportContent.css('div.category-label::text').extract()
+        items['Names'] = SportContent.css('td.label::text').extract()
+        items['Score'] = SportContent.css('td.value::text').extract()
+        items['Date'] = SportContent.css('td.date::text').extract()
+        if 'Table' not in items:
+            print
+            "link has not been given a value"
+        yield items
 
 
 
