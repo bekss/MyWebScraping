@@ -1,12 +1,6 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-from .spiders import sql
 import psycopg2
 import re
 from .items import MarafonItem
-# useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 
 
@@ -38,13 +32,12 @@ class MarafonPipeline:
         for a in range(array):
             # tables = re.sub(r"[-+' '()^%$%_/,.?:#%!@*]", "", str(item["Table"][1]))
             # print(tables[0])
-            table["table{0}".format(a)]= re.sub(r"[^\w]", "", item["Table"][a])                                      # создает все переменные с значениями имен таблиц
+            table["table{0}".format(a)] = re.sub(r"[^\w]", "", item["Table"][a])                                      # создает все переменные с значениями имен таблиц
             tables["table{0}".format(a)] = " create table " + table["table{0}".format(a)] + " (NameTeam text not null, Score text not null, Data text not null );" # в созданные переменные дается значения
             self.cursor.execute(tables["table{0}".format(a)])
             self.connect.commit()
 
         print(tables)
-        return tables
 
 
 
@@ -70,6 +63,8 @@ class MarafonPipeline:
         table = {}
         table_name = []
         array = len(item['Table'])
+        total = item['Count']
+        print(item['Count'])
 
         # for a in range(array):
         #     # tables = re.sub(r"[-+' '()^%$%_/,.?:#%!@*]", "", str(item["Table"][1]))
@@ -80,21 +75,24 @@ class MarafonPipeline:
         b = 0;
         a = 0;
 
-        total_name = len(item['Names'])
+        total_name = len(item['Names']) # размер
         while (a < total_name) & (b < array):
             table["table{0}".format(b)] = re.sub(r"[^\w]", "", item["Table"][b])
             number = table["table{0}".format(b)]
             names = table_name.append(str(number))
             print(table_name[b])
             table_sorted_name = re.sub(r"[^\w]", "", table_name[b])
-            self.cursor.execute(f" insert into {table_sorted_name} values (%s, %s, %s);",
-                                (   item['Names'][a],
-                                    item['Score'][a],
-                                    item['Date'][a]
-                                ))
+            for k in total:
+                self.cursor.execute(f"insert into {table_sorted_name} values (%s, %s, %s);",
+                                    (   item['Names'][k],
+                                        item['Score'][k],
+                                        item['Date'][k]
+                                    ))
             self.connect.commit()
             b+=1;
             a += 1;
+
+
 
 # def main():
 #     url = 'https://www.marathonbet.ru/su/react/results/list'

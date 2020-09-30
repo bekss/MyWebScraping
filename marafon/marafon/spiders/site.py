@@ -38,7 +38,20 @@ class MarafonSpiders(scrapy.Spider):
         buttons[3].click()
 
         items = MarafonItem()
+
+        Category = response.css('.result-category')
+        category_length = len(Category)
+        count_result = []
+        for a in range(category_length):
+            section = response.css('.result-category')[a]
+            result_event = section.css('.result-event').extract()
+            total_result_event = len(result_event)
+            count_result.append(total_result_event)
+        print(count_result)
+
+
         SportContent = response.css('div.result-sport-content')
+        items['Count'] = count_result
         items['Table'] = SportContent.css('div.category-label::text').extract()
         items['Names'] = SportContent.css('td.label::text').extract()
         items['Score'] = SportContent.css('td.value::text').extract()
