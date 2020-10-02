@@ -63,6 +63,9 @@ class MarafonPipeline:
         table = {}
         table_name = []
         array = len(item['Table'])
+        print('-----------------')
+        print(item)
+        print('-----------------')
         total = item['Count']
         print(item['Count'])
 
@@ -72,27 +75,40 @@ class MarafonPipeline:
         #     table["table{0}".format(a)] = re.sub(r"[-+' '()^%$%_/',.?:#%!@*]", "", str(item["Table"][a]))
         # print(table)
 
-        b = 0;
-        a = 0;
-
+        print(len(total))
         total_name = len(item['Names']) # размер
-        while (a < total_name) & (b < array):
+        # while (c < len(total)) & ( b < array):
+        ad = 0;
+        for b in range(array):
+
             table["table{0}".format(b)] = re.sub(r"[^\w]", "", item["Table"][b])
             number = table["table{0}".format(b)]
             names = table_name.append(str(number))
             print(table_name[b])
             table_sorted_name = re.sub(r"[^\w]", "", table_name[b])
-            for k in total:
+
+            # while d < address:
+            address = total[b]
+
+            for f in range(ad, ad+address):
+
                 self.cursor.execute(f"insert into {table_sorted_name} values (%s, %s, %s);",
-                                    (   item['Names'][k],
-                                        item['Score'][k],
-                                        item['Date'][k]
+                                    (   item['Names'][f],
+                                        item['Score'][f],
+                                        item['Date'][f]
                                     ))
-            self.connect.commit()
-            b+=1;
-            a += 1;
+                self.connect.commit()
+                if f == ad+address-1:
+                    ad+= address;
 
 
+        # final_item = []
+        #
+        # final_item.append(zip(item['Names'],
+        #                       item['Score'],
+        #                       item['Date']))
+        # for n in final_item:
+        #     print(tuple(n))
 
 # def main():
 #     url = 'https://www.marathonbet.ru/su/react/results/list'
@@ -100,4 +116,4 @@ class MarafonPipeline:
 #
 #
 # if _name == 'main_':
-#     main()
+#     main()a
