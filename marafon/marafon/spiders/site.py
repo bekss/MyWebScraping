@@ -17,7 +17,7 @@ class MarafonSpiders(scrapy.Spider):
     def __init__(self, **kwargs):
         super(MarafonSpiders, self).__init__(**kwargs)
         self.driver = webdriver.Chrome(PATH)
-        # self.driver.implicitly_wait(5)
+        # self.driver.implicitly_wait(5) ожидание 5 секунд
 
     def parse(self, response):
         self.header = {
@@ -49,7 +49,7 @@ class MarafonSpiders(scrapy.Spider):
             count_result.append(total_result_event)
         print(count_result)
 
-
+        # данные css селекторов
         SportContent = response.css('div.result-sport-content')
         items['Count'] = count_result
         items['Table'] = SportContent.css('div.category-label::text').extract()

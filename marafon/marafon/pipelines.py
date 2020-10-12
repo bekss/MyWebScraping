@@ -1,14 +1,11 @@
 import psycopg2
 import re
-from .items import MarafonItem
-from itemadapter import ItemAdapter
 
 
 class MarafonPipeline:
     def __init__(self, **kwargs):
         super(MarafonPipeline, self).__init__(**kwargs)
         self.connection()
-
 
     def connection(self):
         self.connect = psycopg2.connect(
@@ -30,20 +27,50 @@ class MarafonPipeline:
         tables = {}
         array = len(item['Table'])
         for a in range(array):
-            # tables = re.sub(r"[-+' '()^%$%_/,.?:#%!@*]", "", str(item["Table"][1]))
-            # print(tables[0])
             table["table{0}".format(a)] = re.sub(r"[^\w]", "", item["Table"][a])                                      # создает все переменные с значениями имен таблиц
             tables["table{0}".format(a)] = " create table " + table["table{0}".format(a)] + " (NameTeam text not null, Score text not null, Data text not null );" # в созданные переменные дается значения
             self.cursor.execute(tables["table{0}".format(a)])
             self.connect.commit()
-
         print(tables)
 
+    def store_db(self, item):
+        table = {}
+        table_name = []
+        array = len(item['Table'])
+        print('-----------------')
+        print(item)
+        print('-----------------')
+        total = item['Count']
+        print(item['Count'])
+        print(len(total))
+        total_name = len(item['Names']) # размер
+        ad = 0;
+        for b in range(array):
+
+            table["table{0}".format(b)] = re.sub(r"[^\w]", "", item["Table"][b])
+            number = table["table{0}".format(b)]
+            names = table_name.append(str(number))
+            print(table_name[b])
+            table_sorted_name = re.sub(r"[^\w]", "", table_name[b])
+            address = total[b]
+            for f in range(ad, ad+address):
+
+                self.cursor.execute(f"insert into {table_sorted_name} values (%s, %s, %s);",
+                                    (   item['Names'][f],
+                                        item['Score'][f],
+                                        item['Date'][f]
+                                    ))
+                self.connect.commit()
+                if f == ad+address-1:
+                    ad+= address;
 
 
 
 
-        # for x in range(len(item['Table'])):
+
+#for history work:
+#1
+ # for x in range(len(item['Table'])):
         #     if item['Table']:
         #
         #   table1 =  " create table " + item['Table'][0]+ " (NameTeam text not null, Score text not null, Data text not null );"
@@ -58,50 +85,7 @@ class MarafonPipeline:
         #    Data text not null
         #    );""")
         # self.connect.commit()
-
-    def store_db(self, item):
-        table = {}
-        table_name = []
-        array = len(item['Table'])
-        print('-----------------')
-        print(item)
-        print('-----------------')
-        total = item['Count']
-        print(item['Count'])
-
-        # for a in range(array):
-        #     # tables = re.sub(r"[-+' '()^%$%_/,.?:#%!@*]", "", str(item["Table"][1]))
-        #     # print(tables[0])
-        #     table["table{0}".format(a)] = re.sub(r"[-+' '()^%$%_/',.?:#%!@*]", "", str(item["Table"][a]))
-        # print(table)
-
-        print(len(total))
-        total_name = len(item['Names']) # размер
-        # while (c < len(total)) & ( b < array):
-        ad = 0;
-        for b in range(array):
-
-            table["table{0}".format(b)] = re.sub(r"[^\w]", "", item["Table"][b])
-            number = table["table{0}".format(b)]
-            names = table_name.append(str(number))
-            print(table_name[b])
-            table_sorted_name = re.sub(r"[^\w]", "", table_name[b])
-
-            # while d < address:
-            address = total[b]
-
-            for f in range(ad, ad+address):
-
-                self.cursor.execute(f"insert into {table_sorted_name} values (%s, %s, %s);",
-                                    (   item['Names'][f],
-                                        item['Score'][f],
-                                        item['Date'][f]
-                                    ))
-                self.connect.commit()
-                if f == ad+address-1:
-                    ad+= address;
-
-
+#2
         # final_item = []
         #
         # final_item.append(zip(item['Names'],
@@ -117,3 +101,12 @@ class MarafonPipeline:
 #
 # if _name == 'main_':
 #     main()a
+#3
+        # for a in range(array):
+        #     # tables = re.sub(r"[-+' '()^%$%_/,.?:#%!@*]", "", str(item["Table"][1]))
+        #     # print(tables[0])
+        #     table["table{0}".format(a)] = re.sub(r"[-+' '()^%$%_/',.?:#%!@*]", "", str(item["Table"][a]))
+        # print(table)
+#4
+           # tables = re.sub(r"[-+' '()^%$%_/,.?:#%!@*]", "", str(item["Table"][1]))
+            # print(tables[0])
